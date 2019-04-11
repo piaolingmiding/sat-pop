@@ -1,0 +1,15 @@
+@import '../../mixins';
+
+:host {
+  padding: 48px;
+  display: block;
+  background: rgba(0,0,255,0.05);
+}
+
+.info-wrapper {
+  @include elevation();
+  padding: 16px;
+  background: white;
+  max-width: 160px;
+  line-height: 28px;
+}
