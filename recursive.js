@@ -47,49 +47,56 @@ function arranditems() {
     console.log("array and items")
 }
 function replaceRef(origin, x) {
-    var returnobj={};
+    console.log('origin:',origin,' x :',x);
+    var returnobj = origin;
     if (x.hasOwnProperty('type')) {
         switch (x.type) {
-            case "string": {
-                returnobj =x;
-                
+            case "string": 
+                return x;
                 break;
-            };
-            case "number": {
+            
+            case "number": 
                 break;
-            };
-            case "null": {
+            
+            case "null": 
                 break;
-            };
-            case "boolean": {
+            
+            case "boolean": 
                 break;
-            };
-            case "integer": {
+            
+            case "integer": 
                 break;
-            };
-            case "array": {
-                function arranditems();
+            
+            case "array": 
+                arranditems();
                 break;
-            };
+            
             case "object": {
-
+                console.log("prooerties:", x["properties"]);
+                Object.keys(x["properties"]).forEach(o => {
+                    console.log("o:", o);
+                    replaceRef(origin, o);
+                })
             }
         }
     } else if (x.hasOwnProperty('$ref')) {
-        var na = x[$ref].slice('/definitions/'.length)
-        origin.x = origin[na]
-
-
+        var na = x['$ref'].slice('/definitions/'.length);
+        returnobj.x = origin[na];
+        return returnobj;
     } else {
-
+        console.log('else :')
     }
-
+    console.log('return obj:', returnobj);
+    return returnobj
 }
 
-function rep(obj){
-    return Object.keys(obj).forEach(o=>{
-        replaceRef(obj,o);
-        
+function rep(obj) {
+    return Object.values(obj).forEach(o => {
+        console.log(o,obj);
+        replaceRef(obj, o);
+
     })
-    
+
 }
+
+
