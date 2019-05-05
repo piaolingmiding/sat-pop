@@ -46,57 +46,65 @@ var source = {
 function arranditems() {
     console.log("array and items")
 }
-function replaceRef(origin, x) {
-    console.log('origin:',origin,' x :',x);
-    var returnobj = origin;
-    if (x.hasOwnProperty('type')) {
-        switch (x.type) {
-            case "string": 
-                return x;
-                break;
+function replaceRef(origin) {
+    var returnobj={};
+    if(typeof origin =='object'){
+        returnobj=origin;
+        Object.keys(origin).forEach(k => {
+            console.log("1 k:", k,origin);
+            if (typeof origin[k] == 'object'){
+                var x = origin[k]
+                console.log('1.1 x:',x);
+                if (x.hasOwnProperty('type')) {
+                    switch (x.type) {
+                        case "string": 
+                        
+                        
+                        case "number":                    
+                        
+                        
+                        
+                        case "boolean": 
+                            
+                        
+                        case "integer": 
+                            returnobj[k]=origin[k];    
+                            console.log('2 returnobj:',returnobj);
+                            break;
+                        case "null": 
+                            returnobj[k].type=null;
+                            console.log('3 returnobj null:',returnobj);
+                            
+                            break;
+                        
+                        case "array": 
+                            arranditems();
+                            break;
+                        
+                        case "object": {
+                            console.log("4 prooerties:", x["properties"]);
+                            Object.keys(x["properties"]).forEach(o => {
+                                console.log("5 iteration o:", o);
+                                replaceRef(o);
+                            })
+                        }
+                    }
+                } else if (x.hasOwnProperty('$ref')) {
+                    var na = x['$ref'].slice('/definitions/'.length);
+                    returnobj.x = origin[na];
+                    console.log("6 ref returno:", returnobj);
+                    
+                } else {
+                    console.log('7 else :')
+                }
             
-            case "number": 
-                break;
-            
-            case "null": 
-                break;
-            
-            case "boolean": 
-                break;
-            
-            case "integer": 
-                break;
-            
-            case "array": 
-                arranditems();
-                break;
-            
-            case "object": {
-                console.log("prooerties:", x["properties"]);
-                Object.keys(x["properties"]).forEach(o => {
-                    console.log("o:", o);
-                    replaceRef(origin, o);
-                })
+            }else{
+                console.log('9: else:',typeof origin.k,"  ddd: ",typeof origin[k] )
             }
-        }
-    } else if (x.hasOwnProperty('$ref')) {
-        var na = x['$ref'].slice('/definitions/'.length);
-        returnobj.x = origin[na];
-        return returnobj;
-    } else {
-        console.log('else :')
+        })
     }
-    console.log('return obj:', returnobj);
+    
+    
+    console.log('8 return obj:', returnobj);
     return returnobj
 }
-
-function rep(obj) {
-    return Object.values(obj).forEach(o => {
-        console.log(o,obj);
-        replaceRef(obj, o);
-
-    })
-
-}
-
-
